@@ -1,0 +1,8 @@
+SilenceSwitch Privacy Policy
+
+SilenceSwitch stores only your chosen audio device name and a timeout
+preference in a local settings file on your computer. It makes no network
+connections, collects no personal information, and contains no telemetry
+or analytics. No data of any kind ever leaves your device.
+
+Full policy: https://lotharr51.github.io/SilenceSwitch/privacy-policy.html
