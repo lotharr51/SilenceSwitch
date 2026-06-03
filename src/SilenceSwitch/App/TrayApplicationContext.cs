@@ -2,7 +2,7 @@ namespace SilenceSwitch;
 
 public sealed class TrayApplicationContext : ApplicationContext
 {
-    private readonly AudioDeviceManager _deviceManager;
+    private readonly IAudioDeviceController _deviceManager;
     private readonly SilenceMonitor _silenceMonitor;
     private readonly AppSettings _settings;
     private readonly NotifyIcon _trayIcon;
@@ -12,7 +12,7 @@ public sealed class TrayApplicationContext : ApplicationContext
     private bool _disposed;
 
     public TrayApplicationContext(
-        AudioDeviceManager deviceManager,
+        IAudioDeviceController deviceManager,
         SilenceMonitor silenceMonitor,
         AppSettings settings)
     {

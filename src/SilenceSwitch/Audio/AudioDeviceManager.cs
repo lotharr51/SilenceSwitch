@@ -3,11 +3,9 @@ using NAudio.CoreAudioApi;
 
 namespace SilenceSwitch;
 
-public sealed class AudioDeviceManager : IDisposable
+public sealed class AudioDeviceManager : IAudioDeviceController
 {
     private readonly MMDeviceEnumerator _enumerator = new();
-
-    public record AudioDevice(string Id, string FriendlyName);
 
     public List<AudioDevice> GetActiveRenderDevices()
     {

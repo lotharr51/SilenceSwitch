@@ -2,7 +2,7 @@ namespace SilenceSwitch;
 
 public sealed class SilenceMonitor : IDisposable
 {
-    private readonly AudioDeviceManager _deviceManager;
+    private readonly IAudioDeviceController _deviceManager;
     private readonly AppSettings _settings;
     private readonly IAudioActivityProbe _probe;
     private SilenceStateMachine? _stateMachine;
@@ -17,7 +17,7 @@ public sealed class SilenceMonitor : IDisposable
     public TimeSpan SilenceDuration => DateTime.UtcNow - _lastActivityDetected;
     public bool IsRunning => _timer != null;
 
-    public SilenceMonitor(AudioDeviceManager deviceManager, AppSettings settings)
+    public SilenceMonitor(IAudioDeviceController deviceManager, AppSettings settings)
     {
         _deviceManager = deviceManager;
         _settings = settings;

@@ -102,7 +102,7 @@ public sealed class DeviceSelectionForm : Form
         {
             for (int i = 0; i < _deviceList.Items.Count; i++)
             {
-                if (((AudioDeviceManager.AudioDevice)_deviceList.Items[i]).Id == _settings.PreferredDeviceId)
+                if (((AudioDevice)_deviceList.Items[i]).Id == _settings.PreferredDeviceId)
                 {
                     _deviceList.SelectedIndex = i;
                     break;
@@ -113,7 +113,7 @@ public sealed class DeviceSelectionForm : Form
 
     private void OnSave(object? sender, EventArgs e)
     {
-        if (_deviceList.SelectedItem is not AudioDeviceManager.AudioDevice selected)
+        if (_deviceList.SelectedItem is not AudioDevice selected)
         {
             MessageBox.Show("Please select a device.", "SilenceSwitch",
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
