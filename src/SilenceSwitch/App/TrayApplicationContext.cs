@@ -8,6 +8,7 @@ public sealed class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _trayIcon;
     private readonly ToolStripMenuItem _statusItem;
     private readonly ToolStripMenuItem _silenceItem;
+    private readonly Control _marshalTarget;
     private bool _disposed;
 
     public TrayApplicationContext(
@@ -18,6 +19,11 @@ public sealed class TrayApplicationContext : ApplicationContext
         _deviceManager = deviceManager;
         _silenceMonitor = silenceMonitor;
         _settings = settings;
+
+        // Invisible control used to marshal SilenceMonitor events (fired from a
+        // background thread) back to the UI thread via BeginInvoke.
+        _marshalTarget = new Control();
+        _ = _marshalTarget.Handle; // force HWND creation before timer fires
 
         _statusItem = new ToolStripMenuItem("Status: Monitoring") { Enabled = false };
         _silenceItem = new ToolStripMenuItem("Silence: 0m") { Enabled = false };
@@ -44,9 +50,9 @@ public sealed class TrayApplicationContext : ApplicationContext
         };
         _trayIcon.DoubleClick += OnSettings;
 
-        _silenceMonitor.SilenceUpdated += OnSilenceUpdated;
-        _silenceMonitor.DeviceSwitched += OnDeviceSwitched;
-        _silenceMonitor.IconStateChanged += OnIconStateChanged;
+        _silenceMonitor.SilenceUpdated += d => _marshalTarget.BeginInvoke(() => OnSilenceUpdated(d));
+        _silenceMonitor.DeviceSwitched += () => _marshalTarget.BeginInvoke(OnDeviceSwitched);
+        _silenceMonitor.IconStateChanged += s => _marshalTarget.BeginInvoke(() => OnIconStateChanged(s));
     }
 
     private void OnSilenceUpdated(TimeSpan duration)
@@ -144,6 +150,7 @@ public sealed class TrayApplicationContext : ApplicationContext
             _deviceManager.Dispose();
             _trayIcon.Visible = false;
             _trayIcon.Dispose();
+            _marshalTarget.Dispose();
         }
         base.Dispose(disposing);
     }
